@@ -1,0 +1,110 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  role      String   @default("student")
+  phone     BigInt?   @unique
+  email     String   @unique
+  password  String
+  name      String?
+  city      String?
+  state     String?
+  gender    String?
+  otp       Int?
+  isEmailVerified Boolean  @default(false)
+  isPhoneVerified Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  reviews   Review[]
+  blog      Blog[]
+}
+
+model Review {
+  id          Int    @id @default(autoincrement())
+  content     String
+  rating      Int
+  instituteId Int    
+  institute   Institute @relation(fields: [instituteId], references: [id])
+  userId      String    
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+model Approval{
+  id Int @id @default(autoincrement())
+  name String
+  logo String
+  instituteId      Int
+  institutes   Institute? @relation(fields: [instituteId], references: [id])
+}
+
+model Faq{
+  id Int @id @default(autoincrement())
+  q String 
+  a String
+  instituteId      Int?
+  institutes   Institute? @relation(fields: [instituteId], references: [id])
+  courseId    Int?
+  course      Course?  @relation(fields: [courseId], references: [id])
+}
+
+model Institute {
+  id        Int   @id @default(autoincrement())
+  name      String  @unique 
+  uniLogo      String?
+  type      String?
+  about     String?
+  city      String?
+  state     String?
+  pincode   String?
+  website   String?
+  email     String?
+  facebook  String?
+  instagram String?
+  twitter   String?
+  linkedin  String?
+  embed     String?
+  establishment_year String?
+  images    String[] 
+  approvals Approval[]
+  faqs       Faq[]
+  reviews   Review[]
+  courses   Course[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Course {
+  id             Int     @id @default(autoincrement())
+  name           String     
+  category   String?
+  year       String?
+  month     String?
+  mode           String?
+  fees           String?
+  about         String?
+  images       String[]
+ faqs       Faq[]
+  iid      Int
+  institute   Institute @relation(fields: [iid], references: [id])
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model Blog{
+  id          Int   @id @default(autoincrement())
+  title       String
+  content     String
+  userId      String
+  thumbnail   String?
+  user        User      @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
