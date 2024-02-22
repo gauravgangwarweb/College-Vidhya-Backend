@@ -13,7 +13,7 @@ import mediaRoute from "./route/mediaRoute.js"
 // Configs
 configDotenv()
 const app = new Express()
-// app.use(cors({ credentials: true, origin: false, methods: "*" }))
+app.use(cors({ credentials: true, origin: false, methods: "*" }))
 app.use(Express.json())
 app.use(cookieParser())
 // Routes
